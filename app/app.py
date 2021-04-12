@@ -6,13 +6,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///new.db'
 db = SQLAlchemy(app)
 
 
-class Page(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(500), nullable=False)
-    body = db.Column(db.String(500), nullable=False)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
-        return '<Article %r>' % self.id
+        return f'<User {self.username}>'
 
 
 @app.route('/')
